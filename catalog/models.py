@@ -1,3 +1,12 @@
 from django.db import models
 
-# Create your models here.
+NULLABLE = {'blank': True, 'null': True}
+
+
+class Category(models.Model):
+    def __str__(self):
+        pass
+
+    class Meta:
+        verbose_name = 'категория'
+        verbose_name_plural = 'категории'
