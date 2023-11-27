@@ -1,11 +1,12 @@
 {% extends 'catalog/base.html' %}
+{% load my_tags %}
 {% block content %}
 <div class="row">
     {% for object in object_list %}
     <div class="col-md-4">
         <div class="card mb-4 box-shadow">
             <img class="card-img-top"
-                 data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail"
+                 src="{% mediapath object.photo %}"
                  alt="Card image cap">
             <div class="card-body">
                 <p class="card-title">{{ object.name }}</p>
