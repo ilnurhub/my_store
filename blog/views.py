@@ -8,7 +8,7 @@ from blog.models import Post
 class PostCreateView(CreateView):
     model = Post
     fields = ('title', 'body', 'photo')
-    success_url = reverse_lazy('catalog:index')
+    success_url = reverse_lazy('blog:list')
 
 
 class PostListView(ListView):
