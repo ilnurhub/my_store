@@ -5,14 +5,15 @@
 </div>
 {% for object in object_list %}
 <div class="col-md-4">
-    <div class="card mb-4, box-shadow">
+    <div class="card mb-4 box-shadow">
         <div class="card-body">
             <p class="card-text">
                 {{ object|title }}
             </p>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                    <a href="#">View</a>
+                    <a href="{% url 'blog:view_post' object.pk %}" type="button"
+                       class="btn btn-sm btn-outline-secondary">View</a>
                     <a href="#">Edit</a>
                     <a href="#">Delete</a>
                 </div>
