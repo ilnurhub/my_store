@@ -1,14 +1,14 @@
 from django.shortcuts import render
+from django.views.generic import ListView
 
 from catalog.models import Product
 
 
-def index(request):
-    context = {
-        'object_list': Product.objects.all(),
+class ProductListView(ListView):
+    model = Product
+    extra_context = {
         'title': 'My Store - Главная'
     }
-    return render(request, 'catalog/index.html', context)
 
 
 def contacts(request):
