@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from catalog.models import Product
 
@@ -23,10 +23,11 @@ def contacts(request):
     return render(request, 'catalog/contacts.html', context)
 
 
-def product(request, pk):
-    product_item = Product.objects.get(pk=pk)
-    context = {
-        'object': Product.objects.get(id=pk),
-        'title': product_item.name
-    }
-    return render(request, 'catalog/product.html', context)
+class ProductDetailView(DetailView):
+    model = Product
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+        product_item = Product.objects.get(pk=self.kwargs.get('pk'))
+        context_data['title'] = product_item.name
+        return context_data
