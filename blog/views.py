@@ -13,6 +13,11 @@ class PostCreateView(CreateView):
 class PostListView(ListView):
     model = Post
 
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        queryset = queryset.filter(is_published=True)
+        return queryset
+
 
 class PostDetailView(DetailView):
     model = Post
