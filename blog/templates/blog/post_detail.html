@@ -8,9 +8,11 @@
                     {{ object.title }}
                 </h3>
             </div>
+            {% if object.photo %}
             <img class="card-img-top"
                  src="/media/{{ object.photo }}"
                  alt="Card image cap">
+            {% endif %}
             <div class="card-body">
                 <p class="card-text">{{ object.body }}</p>
                 <p class="card-add">Дата публикации: {{ object.created_at }}</p>
