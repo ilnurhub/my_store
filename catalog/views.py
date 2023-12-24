@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView
 
+from catalog.forms import ProductForm
 from catalog.models import Product
 
 
@@ -31,3 +33,9 @@ class ProductDetailView(DetailView):
         product_item = Product.objects.get(pk=self.kwargs.get('pk'))
         context_data['title'] = product_item.name
         return context_data
+
+
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    success_url = reverse_lazy('catalog:index')
