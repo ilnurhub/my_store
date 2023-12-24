@@ -19,7 +19,10 @@
                     <div class="btn-group">
                         <a href="{% url 'catalog:product' object.pk %}" type="button"
                            class="btn btn-sm btn-outline-secondary">Подробнее</a>
-                        <a href="{% url 'catalog:update_product' object.pk %}" type="button" class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                        <a href="{% url 'catalog:update_product' object.pk %}" type="button"
+                           class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                        <a href="{% url 'catalog:delete_product' object.pk %}" type="button"
+                           class="btn btn-sm btn-outline-danger">Удалить</a>
                     </div>
                 </div>
             </div>
