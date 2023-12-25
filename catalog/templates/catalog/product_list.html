@@ -15,6 +15,11 @@
                 <p class="card-title">{{ object.name }}</p>
                 <p class="card-price">{{ object.price }} руб</p>
                 <p class="card-text">{{ object.description|truncatechars:100 }}</p>
+                {% for vers in object.version.all %}
+                {% if vers.is_active == True %}
+                <p class="card-text">{{ vers.version_name }}</p>
+                {% endif %}
+                {% endfor %}
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
                         <a href="{% url 'catalog:product' object.pk %}" type="button"
