@@ -5,7 +5,7 @@ from django.contrib.auth.views import LoginView as BaseLoginView
 from django.contrib.auth.views import LogoutView as BaseLogoutView
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView
 
@@ -40,3 +40,20 @@ class RegisterView(CreateView):
         return super().form_valid(form)
 
 
+def email_verification(request):
+    context = {
+        'card_title': 'На Ваш email выслан секретный ключ. Введите его в поле для верификации Вашей почты.'
+    }
+    users = User.objects.all()
+    if request.method == 'POST':
+        secret_key = request.POST.get('secret_key')
+        for user in users:
+            if user.secret_key == secret_key:
+                user.is_active = True
+                user.save()
+                return HttpResponseRedirect(reverse('users:login'))
+            else:
+                context = {
+                    'card_title': 'Неверный ключ. Попробуйте ещё раз'
+                }
+    return render(request, 'users/email_verification.html', context=context)
