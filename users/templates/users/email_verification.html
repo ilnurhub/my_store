@@ -1,0 +1,24 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+<div class="col-3"></div>
+<div class="col-6">
+    <div class="card">
+        <div class="card-header">
+            {{ card_title }}
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="secret_key">Секретный ключ</label>
+                    <input type="text" name="secret_key" class="form-control" id="secret_key"
+                           placeholder="Секретный ключ"
+                           required>
+                </div>
+                <button type="submit" class="btn btn-success">Подтвердить</button>
+            </form>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+</div>
+{% endblock %}

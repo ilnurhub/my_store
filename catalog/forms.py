@@ -17,6 +17,11 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
         model = Product
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['owner'].widget = forms.HiddenInput()
+
     def clean_name(self):
         cleaned_data = self.cleaned_data['name']
         for word in self.VALIDATION_WORDS:
