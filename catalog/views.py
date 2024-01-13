@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
 from django.shortcuts import render
@@ -8,13 +9,14 @@ from catalog.forms import ProductForm, VersionForm
 from catalog.models import Product, Version
 
 
-class ProductListView(ListView):
+class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     extra_context = {
         'title': 'My Store - Главная'
     }
 
 
+@login_required
 def contacts(request):
     context = {
         'title': 'My Store - Контакты'
@@ -27,7 +29,7 @@ def contacts(request):
     return render(request, 'catalog/contacts.html', context)
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
 
     def get_context_data(self, *args, **kwargs):
