@@ -17,6 +17,8 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+
+    CHOICES = ((True, 'Опубликован'), (False, 'Не опубликован'))
     name = models.CharField(max_length=250, verbose_name='Наименование')
     description = models.TextField(**NULLABLE, verbose_name='Описание')
     photo = models.ImageField(upload_to='products/', **NULLABLE, verbose_name='Изображение')
@@ -26,6 +28,7 @@ class Product(models.Model):
     last_modified_at = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE,
                               verbose_name='владелец продукта')
+    is_published = models.BooleanField(default=False, choices=CHOICES, verbose_name='Статус публикации')
 
     def __str__(self):
         return f'{self.name}, {self.category}, {self.price}'
@@ -33,6 +36,20 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'продукт'
         verbose_name_plural = 'продукты'
+        permissions = [
+            (
+                'set_published',
+                'Can publish product'
+            ),
+            (
+                'change_product_description',
+                'Can change product_description'
+            ),
+            (
+                'change_category',
+                'Can change category of the product'
+            )
+        ]
 
 
 class Version(models.Model):
