@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div>
-        {% if object %}
+        {% if object and user == object.owner or perms.catalog.change_version %}
         <div class="col-6">
             <div class="card">
                 <div class="card-header">
