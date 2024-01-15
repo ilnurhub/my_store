@@ -24,12 +24,27 @@
                     <div class="btn-group">
                         <a href="{% url 'catalog:product' object.pk %}" type="button"
                            class="btn btn-sm btn-outline-secondary">Подробнее</a>
+                        {% if user.is_staff or user == object.owner %}
                         <a href="{% url 'catalog:update_product' object.pk %}" type="button"
                            class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                        {% endif %}
+                        {% if user.is_superuser %}
                         <a href="{% url 'catalog:delete_product' object.pk %}" type="button"
                            class="btn btn-sm btn-outline-danger">Удалить</a>
+                        {% endif %}
                     </div>
+
                 </div>
+                {% if user.is_staff %}
+                <div class="card-footer">
+                    {% if object.is_published %}
+                    <a href="{% url 'catalog:toggle_publication' object.pk %}" class="btn btn-warning">Отменить
+                        публикацию</a>
+                    {% else %}
+                    <a href="{% url 'catalog:toggle_publication' object.pk %}" class="btn btn-success">Опубликовать</a>
+                    {% endif %}
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
