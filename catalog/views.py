@@ -3,17 +3,53 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.forms import inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
 from catalog.forms import OwnerProductForm, VersionForm, ModeratorProductForm, FullProductForm
-from catalog.models import Product, Version
+from catalog.models import Product, Version, Category
+from catalog.services import get_categories_cache
+
+
+class IndexView(LoginRequiredMixin, TemplateView):
+    template_name = 'catalog/index.html'
+    extra_context = {
+        'title': 'My Store - Главная'
+    }
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['object_list'] = Category.objects.all()[:3]
+        return context_data
+
+
+class CategoryListView(LoginRequiredMixin, ListView):
+    model = Category
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+        context_data['object_list'] = get_categories_cache()
+        context_data['title'] = 'My Store - Категории продуктов'
+        return context_data
 
 
 class ProductListView(LoginRequiredMixin, ListView):
     model = Product
-    extra_context = {
-        'title': 'My Store - Главная'
-    }
+
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(category_id=self.kwargs.get('pk'), )
+        return queryset
+
+    # def get_context_data(self, *args, **kwargs):
+    #     context_data = super().get_context_data(*args, **kwargs)
+    #     category_item = Category.objects.get(pk=self.kwargs.get('pk'))
+    #     context_data['category_pk'] = category_item.pk
+    #     context_data['title'] = f'Продукты категории {category_item.name}'
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+        category_item = Category.objects.get(pk=self.kwargs.get('pk'))
+        context_data['category_pk'] = category_item.pk
+        context_data['title'] = f'Продукты категории {category_item.name}'
+        return context_data
 
 
 @login_required
@@ -42,7 +78,7 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
 class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = OwnerProductForm
-    success_url = reverse_lazy('catalog:index')
+    success_url = reverse_lazy('catalog:categories')
 
     def form_valid(self, form):
         self.object = form.save()
@@ -54,7 +90,9 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
 class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
     form_class = FullProductForm
-    success_url = reverse_lazy('catalog:index')
+
+    def get_success_url(self):
+        return reverse('catalog:update_product', args=[self.kwargs.get('pk')])
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -97,7 +135,7 @@ class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
-    success_url = reverse_lazy('catalog:index')
+    success_url = reverse_lazy('catalog:categories')
 
     def test_func(self):
         return self.request.user.is_superuser
