@@ -3,10 +3,22 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.forms import inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
 from catalog.forms import OwnerProductForm, VersionForm, ModeratorProductForm, FullProductForm
-from catalog.models import Product, Version
+from catalog.models import Product, Version, Category
+
+
+class IndexView(LoginRequiredMixin, TemplateView):
+    template_name = 'catalog/index.html'
+    extra_context = {
+        'title': 'My Store - Главная'
+    }
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['object_list'] = Category.objects.all()[:3]
+        return context_data
 
 
 class ProductListView(LoginRequiredMixin, ListView):
