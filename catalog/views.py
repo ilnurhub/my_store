@@ -7,6 +7,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from catalog.forms import OwnerProductForm, VersionForm, ModeratorProductForm, FullProductForm
 from catalog.models import Product, Version, Category
+from catalog.services import get_categories_cache
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -23,16 +24,19 @@ class IndexView(LoginRequiredMixin, TemplateView):
 
 class CategoryListView(LoginRequiredMixin, ListView):
     model = Category
-    extra_context = {
-        'title': 'My Store - Категории продуктов'
-    }
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+        context_data['object_list'] = get_categories_cache()
+        context_data['title'] = 'My Store - Категории продуктов'
+        return context_data
 
 
 class ProductListView(LoginRequiredMixin, ListView):
     model = Product
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(category_id=self.kwargs.get('pk'),)
+        queryset = super().get_queryset().filter(category_id=self.kwargs.get('pk'), )
         return queryset
 
     # def get_context_data(self, *args, **kwargs):
