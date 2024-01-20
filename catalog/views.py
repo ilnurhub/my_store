@@ -21,6 +21,13 @@ class IndexView(LoginRequiredMixin, TemplateView):
         return context_data
 
 
+class CategoryListView(LoginRequiredMixin, ListView):
+    model = Category
+    extra_context = {
+        'title': 'My Store - Категории продуктов'
+    }
+
+
 class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     extra_context = {
