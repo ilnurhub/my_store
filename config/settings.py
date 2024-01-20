@@ -139,3 +139,12 @@ EMAIL_HOST_USER = 'ns_ilnur@mail.ru'
 EMAIL_HOST_PASSWORD = 'Wtq40ByuiqWpnqdADq2e'
 EMAIL_USE_SSL = False
 EMAIL_USE_TLS = True
+
+CACHE_ENABLED = True
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+}
